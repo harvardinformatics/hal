@@ -1,0 +1,3 @@
+[submodule "sonLib"]
+	path = sonLib
+	url = https://github.com/ComparativeGenomicsToolkit/sonLib.git
