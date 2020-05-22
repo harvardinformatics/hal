@@ -90,7 +90,7 @@ ifeq ($(TARGETOS), Darwin)
 else
     F2CPATH=${CLAPACKPATH}/F2CLIBS
     CXXFLAGS += -DENABLE_PHYLOP -I${PHAST}/include -I${PHAST}/src/lib/pcre
-    LDLIBS += -L${PHAST}/lib -lphast -llapack -lf2c
+    LDLIBS += -L${PHAST}/lib -lphast -llapack -lf2c -lpcre
 endif
 
 endif

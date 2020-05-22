@@ -1,8 +1,17 @@
 FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
+RUN sed -i'' 's/^# deb-src/deb-src/' /etc/apt/sources.list
 RUN apt update && apt install -y --no-install-recommends \
+  build-essential \
+  debhelper \
+  dpkg-dev \
   f2c \
+  liblapack-dev \
+  libblas-dev \
+  libtmglib-dev \
+  libpcre3-dev \
+  help2man \
   libatlas-base-dev \
   libbz2-dev \
   libhdf5-dev \
@@ -43,10 +52,9 @@ RUN cd sonLib \
   && make -j
 
 # debian phast package lacks headers & libphast (needed for phyloP)
-ADD http://compgen.cshl.edu/phast/downloads/phast.v1_5.tgz /
-RUN tar -C / -xzf /phast.v1_5.tgz
-RUN cd /phast/src/ \
-  && make CLAPACKPATH=''
+RUN apt-get source phast
+RUN apt-get --build source phast
+RUN mv phast-1.5+dfsg /phast
 
 COPY ./ .
 
