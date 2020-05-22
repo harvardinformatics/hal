@@ -89,8 +89,8 @@ ifeq ($(TARGETOS), Darwin)
     LDLIBS += -L${PHAST}/lib -lphast -lc -framework Accelerate
 else
     F2CPATH=${CLAPACKPATH}/F2CLIBS
-    CXXFLAGS += -DENABLE_PHYLOP -I${PHAST}/include -I${PHAST}/src/lib/pcre -I${CLAPACKPATH}/INCLUDE -I${F2CPATH}
-    LDLIBS += -L${PHAST}/lib -lphast -L${CLAPACKPATH} -L${F2CPATH} -llapack -ltmg -lblaswr -lf2c 
+    CXXFLAGS += -DENABLE_PHYLOP -I${PHAST}/include -I${PHAST}/src/lib/pcre
+    LDLIBS += -L${PHAST}/lib -lphast -llapack -lf2c
 endif
 
 endif

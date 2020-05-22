@@ -2,6 +2,8 @@ FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt install -y --no-install-recommends \
+  f2c \
+  libatlas-base-dev \
   libbz2-dev \
   libhdf5-dev \
   libmariadb-dev-compat \
@@ -13,8 +15,8 @@ RUN apt update && apt install -y --no-install-recommends \
   python3-setuptools \
   uuid-dev
 
-ADD https://hgdownload.cse.ucsc.edu/admin/exe/userApps.v396.src.tgz .
-RUN tar -xvf userApps.v396.src.tgz \
+ADD https://hgdownload.cse.ucsc.edu/admin/exe/userApps.archive/userApps.v389.src.tgz .
+RUN tar -xvf userApps.v389.src.tgz \
   && export BINDIR=/usr/local/bin \
   && for dir in lib htslib hg/lib \
                 hg/bedSort \
@@ -40,9 +42,15 @@ RUN cd sonLib \
   && python3 setup.py install \
   && make -j
 
+# debian phast package lacks headers & libphast (needed for phyloP)
+ADD http://compgen.cshl.edu/phast/downloads/phast.v1_5.tgz /
+RUN tar -C / -xzf /phast.v1_5.tgz
+RUN cd /phast/src/ \
+  && make CLAPACKPATH=''
+
 COPY ./ .
 
-RUN make -j sonLibRootDir=${PWD}/sonLib
+RUN make -j sonLibRootDir=${PWD}/sonLib ENABLE_PHYLOP=1
 
 FROM ubuntu:20.04
  
